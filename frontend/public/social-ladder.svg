@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="400" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes climbLadder {
+      0% { transform: translateY(40px); }
+      50% { transform: translateY(0px); }
+      100% { transform: translateY(40px); }
+    }
+    @keyframes ladderFloat {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes iconPop {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+    .ladder { animation: ladderFloat 3s ease-in-out infinite; }
+    .climber { animation: climbLadder 4s ease-in-out infinite; }
+    .social-icon { animation: iconPop 2s ease-in-out infinite; }
+    .social-icon:nth-child(2) { animation-delay: 0.4s; }
+    .social-icon:nth-child(3) { animation-delay: 0.8s; }
+    .social-icon:nth-child(4) { animation-delay: 1.2s; }
+  </style>
+  
+  <!-- Background Elements -->
+  <circle cx="250" cy="200" r="150" fill="#1e4d5c" opacity="0.1"/>
+  <circle cx="250" cy="200" r="120" fill="#2a8a7d" opacity="0.2"/>
+  
+  <!-- Ladder -->
+  <g class="ladder">
+    <rect x="180" y="80" width="10" height="300" fill="#f7a072"/>
+    <rect x="310" y="80" width="10" height="300" fill="#f7a072"/>
+    <!-- Rungs -->
+    <rect x="180" y="120" width="140" height="8" fill="#f7a072"/>
+    <rect x="180" y="170" width="140" height="8" fill="#f7a072"/>
+    <rect x="180" y="220" width="140" height="8" fill="#f7a072"/>
+    <rect x="180" y="270" width="140" height="8" fill="#f7a072"/>
+    <rect x="180" y="320" width="140" height="8" fill="#f7a072"/>
+  </g>
+
+  <!-- Person Climbing -->
+  <g class="climber">
+    <!-- Body -->
+    <path d="M220 200 Q240 180 260 200" stroke="#1e4d5c" stroke-width="8" fill="none"/>
+    <circle cx="240" cy="170" r="15" fill="#1e4d5c"/>
+    <!-- Arms -->
+    <path d="M230 190 L215 170" stroke="#1e4d5c" stroke-width="6" fill="none"/>
+    <path d="M250 190 L265 170" stroke="#1e4d5c" stroke-width="6" fill="none"/>
+    <!-- Legs -->
+    <path d="M230 200 L220 220" stroke="#1e4d5c" stroke-width="6" fill="none"/>
+    <path d="M250 200 L260 220" stroke="#1e4d5c" stroke-width="6" fill="none"/>
+  </g>
+
+  <!-- Social Media Icons -->
+  <g>
+    <circle class="social-icon" cx="150" cy="100" r="20" fill="#2a8a7d"/>
+    <circle class="social-icon" cx="350" cy="150" r="20" fill="#f7a072"/>
+    <circle class="social-icon" cx="150" cy="250" r="20" fill="#1e4d5c"/>
+    <circle class="social-icon" cx="350" cy="300" r="20" fill="#e88a5c"/>
+  </g>
+</svg>
