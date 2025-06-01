@@ -90,33 +90,44 @@ export const login = createAsyncThunk(
   async ({ email, password }, { rejectWithValue, dispatch }) => {
     try {
       console.log('Attempting login with:', { email });
-      const { data } = await api.post("/users/login", { email, password });
-      console.log('Login response:', data);
+      
+      // Make sure we're sending the correct data format
+      const response = await api.post("/users/login", {
+        email: email.trim(),
+        password: password
+      });
+      
+      console.log('Login response:', response.data);
+      
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Login failed');
+      }
       
       // Store the user info in localStorage
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
       
       // Dispatch setCredentials action
-      dispatch(setCredentials(data));
+      dispatch(setCredentials(response.data));
       
       // Show welcome back message
       const event = new CustomEvent('showNotification', {
         detail: {
-          message: `Welcome back, ${data.user.name}!`,
+          message: `Welcome back, ${response.data.user.name}!`,
           type: 'success'
         }
       });
       window.dispatchEvent(event);
       
-      return data;
+      return response.data;
     } catch (error) {
       console.error('Login error:', {
         message: error.response?.data?.message,
         status: error.response?.status,
-        data: error.response?.data
+        data: error.response?.data,
+        error: error.message
       });
       return rejectWithValue(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || error.message || "Login failed. Please try again."
       );
     }
   }
