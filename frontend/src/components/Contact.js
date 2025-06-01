@@ -85,7 +85,7 @@ const Contact = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/contact', formData);
+      const response = await axios.post('https://hashweb-backend.onrender.com/api/v1/contact', formData);
       if (response.data.success) {
         toast.success('Thank you! Your message has been sent successfully.');
         setFormData({

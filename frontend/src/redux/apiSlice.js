@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { clearCredentials } from "./slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:5000/api/v1',
+  baseUrl: 'https://hashweb-backend.onrender.com/api/v1',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth?.userInfo?.token;
     if (token) {

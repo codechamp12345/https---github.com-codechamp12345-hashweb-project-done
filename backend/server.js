@@ -21,9 +21,8 @@ app.use(cookieParser());
 // CORS setup
 const allowedOrigins = [
   "http://localhost:3000",               // local dev frontend
-  "https://hashweb-project-u53z.vercel.app",  // your deployed frontend
-  process.env.FRONTEND_URL               // dynamic frontend URL from env
-].filter(Boolean); // Remove any undefined values
+  "https://https-github-com-codechamp12345-has.vercel.app"  // new frontend
+];
 
 app.use(cors({
   origin: function(origin, callback) {
@@ -48,6 +47,14 @@ app.use(cors({
 app.options('*', cors());
 
 // Routes
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Server is healthy",
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use("/api/v1", userRoutes);
 app.use("/api/v1/auth", otpRoutes);
 app.use("/api/v1/tasks", taskRoutes);

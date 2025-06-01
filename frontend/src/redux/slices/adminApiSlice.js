@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:5000/api/v1/admin',
+  baseUrl: 'https://hashweb-backend.onrender.com/api/v1/admin',
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem('adminToken');
     console.log('Token in prepareHeaders:', token); // Debug log
