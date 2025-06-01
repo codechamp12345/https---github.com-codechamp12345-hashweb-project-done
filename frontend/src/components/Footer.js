@@ -56,7 +56,7 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* Logo and Description */}
-          <Grid item xs={12} md={4}>
+          <Grid xs={12} md={4}>
             <Typography variant="h6" color="primary" gutterBottom fontWeight="bold">
               HashWeb
             </Typography>
@@ -88,7 +88,7 @@ const Footer = () => {
 
           {/* Links Sections */}
           {Object.entries(footerLinks).map(([title, links], index) => (
-            <Grid item xs={12} sm={6} md={2} key={index}>
+            <Grid xs={12} sm={6} md={2} key={index}>
               <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight="bold">
                 {title}
               </Typography>
@@ -116,7 +116,7 @@ const Footer = () => {
           ))}
 
           {/* Contact Section */}
-          <Grid item xs={12} md={2}>
+          <Grid xs={12} md={2}>
             <Typography variant="subtitle1" color="text.primary" gutterBottom fontWeight="bold">
               Contact Us
             </Typography>

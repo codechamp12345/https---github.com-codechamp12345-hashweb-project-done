@@ -90,10 +90,12 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  console.log('Login attempt:', { email: req.body.email });
   try {
     let { email, password } = req.body;
 
     if (!email || !password) {
+      console.log('Missing credentials');
       return res.status(400).json({
         message: "Either Email or Password is missing!",
         success: false,
@@ -102,6 +104,7 @@ export const login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(404).json({
         message: "Invalid Credentials!",
         success: false,
@@ -110,12 +113,14 @@ export const login = async (req, res) => {
 
     const isPassCorrect = await bcrypt.compare(password, user?.password);
     if (!isPassCorrect) {
+      console.log('Invalid password for user:', email);
       return res.status(404).json({
         message: "Invalid Credentials!",
         success: false,
       });
     }
 
+    console.log('Login successful for user:', email);
     const token = generateTokenAndSetCookie(user._id, res);
 
     const userWithoutPassword = user.toObject();
@@ -128,8 +133,8 @@ export const login = async (req, res) => {
       token: token
     });
   } catch (error) {
-    console.log("Error Occured in login", error);
-    res.status(500).json({ message: "Internal Server Error", succcess: false });
+    console.error("Error in login:", error);
+    res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
 

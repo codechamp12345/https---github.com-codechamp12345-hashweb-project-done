@@ -724,9 +724,9 @@ const Home = () => {
             Everything you need to grow your business
           </GradientSectionTitle>
           <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={12}>
+            <Grid xs={12} md={12}>
               <Grid container spacing={4} justifyContent="center">
-                <Grid item xs={12} sm={4}>
+                <Grid xs={12} sm={4}>
                   <FeatureCard>
                     <Box sx={{ mb: 2 }} className="feature-icon">
                       <GeoTargetingSvg />
@@ -739,7 +739,7 @@ const Home = () => {
                     </Typography>
                   </FeatureCard>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid xs={12} sm={4}>
                   <FeatureCard>
                     <Box sx={{ mb: 2 }} className="feature-icon">
                       <SecuritySvg />
@@ -752,7 +752,7 @@ const Home = () => {
                     </Typography>
                   </FeatureCard>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid xs={12} sm={4}>
                   <FeatureCard>
                     <Box sx={{ mb: 2 }} className="feature-icon">
                       <BonusesSvg />
@@ -825,23 +825,27 @@ const Home = () => {
                 },
               }}
             >
-              {services.map((service, idx) => (
-                <ServiceCard key={service.name} gradient={service.gradient}>
-                  <IconCircle>
-                    {service.icon}
-                  </IconCircle>
-                  <Typography variant="h6" sx={{ mt: 2, fontWeight: 700, letterSpacing: 0.5 }}>
-                    {service.name}
-                  </Typography>
-                  <Box sx={{ mt: 1 }}>
-                    {service.tasks.map((task, i) => (
-                      <Typography key={i} variant="body2" sx={{ color: '#fff', opacity: 0.92, fontWeight: 400 }}>
-                        {task}
+              <Grid container spacing={4} justifyContent="center">
+                {services.map((service, idx) => (
+                  <Grid xs={12} sm={6} md={4} key={service.name}>
+                    <ServiceCard gradient={service.gradient}>
+                      <IconCircle>
+                        {service.icon}
+                      </IconCircle>
+                      <Typography variant="h6" sx={{ mt: 2, fontWeight: 700, letterSpacing: 0.5 }}>
+                        {service.name}
                       </Typography>
-                    ))}
-                  </Box>
-                </ServiceCard>
-              ))}
+                      <Box sx={{ mt: 1 }}>
+                        {service.tasks.map((task, i) => (
+                          <Typography key={i} variant="body2" sx={{ color: '#fff', opacity: 0.92, fontWeight: 400 }}>
+                            {task}
+                          </Typography>
+                        ))}
+                      </Box>
+                    </ServiceCard>
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           </Box>
         </Container>

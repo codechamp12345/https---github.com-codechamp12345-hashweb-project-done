@@ -1,185 +1,112 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { login } from "../redux/slices/authSlice";
+import { toast } from "react-toastify";
 import {
+  Container,
   Box,
   Typography,
   TextField,
   Button,
   Paper,
-  Grid,
+  CircularProgress,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useLoginMutation } from "../redux/slices/usersApiSlice";
-import { setCredentials } from "../redux/slices/authSlice";
-import toast from "react-hot-toast";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [login, { isLoading }] = useLoginMutation();
+  const { userInfo, status, error } = useSelector((state) => state.auth);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      const response = await login(formData).unwrap();
-      if (response.success) {
-        const userData = {
-          ...response.user,
-          token: response.token,
-          points: response.user.points || 0,
-        };
-        dispatch(setCredentials(userData));
-        toast.success(response.message || "Login successful");
-        setFormData({ email: "", password: "" });
-        navigate("/earn-credits");
-      } else {
-        toast.error(response.message || "Login failed");
-      }
+      await dispatch(login({ email, password })).unwrap();
+      // Navigation will be handled by the useEffect above
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to login!");
+      toast.error(error || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(to right, #1e3c72, #2a5298)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        px: 2,
-      }}
-    >
-      <Paper
-        elevation={10}
+    <Container component="main" maxWidth="xs">
+      <Box
         sx={{
-          p: 4,
-          borderRadius: "20px",
-          maxWidth: 400,
-          width: "100%",
-          backgroundColor: "rgba(255, 255, 255, 0.05)",
-          backdropFilter: "blur(12px)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ color: "#fff", fontWeight: "bold" }}
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+          }}
         >
-          Sign In
-        </Typography>
-
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            variant="outlined"
-            required
-            margin="normal"
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            InputProps={{
-              style: {
-                color: "#fff",
-                borderColor: "#fff",
-              },
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#fff",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#ccc",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#00bfff",
-                },
-              },
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            variant="outlined"
-            required
-            margin="normal"
-            InputLabelProps={{ style: { color: "#ccc" } }}
-            InputProps={{
-              style: {
-                color: "#fff",
-              },
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#fff",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#ccc",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#00bfff",
-                },
-              },
-            }}
-          />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isLoading}
-            sx={{
-              mt: 3,
-              py: 1.5,
-              background: "linear-gradient(to right, #00c6ff, #0072ff)",
-              fontWeight: "bold",
-              fontSize: "16px",
-              borderRadius: "12px",
-              "&:hover": {
-                background: "linear-gradient(to right, #0072ff, #00c6ff)",
-              },
-            }}
-          >
-            {isLoading ? "Signing In..." : "Sign In"}
-          </Button>
-        </form>
-
-        <Grid container justifyContent="center" sx={{ mt: 2 }}>
-          <Grid item>
-            <Typography sx={{ color: "#fff" }}>
-              Don’t have an account?{" "}
-              <Link
-                to="/register"
-                style={{ color: "#00c6ff", fontWeight: "bold", textDecoration: "none" }}
-              >
-                Register
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} /> : "Sign In"}
+            </Button>
+            <Box sx={{ textAlign: "center" }}>
+              <Link to="/register" style={{ textDecoration: "none" }}>
+                {"Don't have an account? Sign Up"}
               </Link>
-            </Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Box>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    </Container>
   );
 };
 

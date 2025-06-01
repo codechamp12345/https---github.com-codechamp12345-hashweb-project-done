@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../services/api";
 
 const initialState = {
   userInfo: localStorage.getItem("userInfo")
@@ -7,6 +8,8 @@ const initialState = {
   adminInfo: localStorage.getItem("adminInfo")
     ? JSON.parse(localStorage.getItem("adminInfo"))
     : null,
+  status: 'idle',
+  error: null
 };
 
 const authSlice = createSlice({
@@ -81,5 +84,42 @@ const authSlice = createSlice({
 });
 
 export const { setCredentials, updatePoints, logout, clearCredentials } = authSlice.actions;
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ email, password }, { rejectWithValue, dispatch }) => {
+    try {
+      console.log('Attempting login with:', { email });
+      const { data } = await api.post("/users/login", { email, password });
+      console.log('Login response:', data);
+      
+      // Store the user info in localStorage
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      
+      // Dispatch setCredentials action
+      dispatch(setCredentials(data));
+      
+      // Show welcome back message
+      const event = new CustomEvent('showNotification', {
+        detail: {
+          message: `Welcome back, ${data.user.name}!`,
+          type: 'success'
+        }
+      });
+      window.dispatchEvent(event);
+      
+      return data;
+    } catch (error) {
+      console.error('Login error:', {
+        message: error.response?.data?.message,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      return rejectWithValue(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
+    }
+  }
+);
 
 export default authSlice.reducer;

@@ -354,10 +354,9 @@ const Navbar = ({ toggleTheme }) => {
       <List>
         {navItems.map((item) => (
           <ListItem
-            button
+            key={item.text}
             component={Link}
             to={item.path}
-            key={item.text}
             onClick={handleDrawerToggle}
             sx={{
               borderRadius: 2,
@@ -379,7 +378,6 @@ const Navbar = ({ toggleTheme }) => {
             <Divider sx={{ my: 1, bgcolor: "rgba(255,255,255,0.1)" }} />
             {profileItems.map((item) => (
               <ListItem
-                button
                 key={item.text}
                 onClick={item.action || handleDrawerToggle}
                 sx={{

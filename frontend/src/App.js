@@ -20,6 +20,7 @@ import AdminContacts from "./components/admin/AdminContacts";
 import AdminTasks from "./components/admin/AdminTasks";
 import { useSelector } from 'react-redux';
 import ProtectedRoute from './components/admin/ProtectedRoute';
+import Notification from './components/Notification';
 
 const getDesignTokens = (mode) => ({
   palette: {
@@ -121,48 +122,47 @@ function AppContent() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: "100vh" }}>
-        <ToastContainer position="top-right" autoClose={3000} />
-        {isAdminRoute ? <AdminNavbar /> : <Navbar toggleTheme={toggleTheme} />}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/earn-credits" element={<EarnCredits />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/verify-email" element={<EmailVerification />} />
-          <Route path="/about" element={<AboutUs />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/tasks"
-            element={
-              <ProtectedRoute>
-                <AdminTasks />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        <Cursor
-          style={{
-            left: `${cursorPos.x}px`,
-            top: `${cursorPos.y}px`,
-            opacity: mode === "dark" ? 1 : 0,
-          }}
+      <Notification />
+      <ToastContainer position="top-right" autoClose={3000} />
+      {isAdminRoute ? <AdminNavbar /> : <Navbar toggleTheme={toggleTheme} />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/earn-credits" element={<EarnCredits />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/verify-email" element={<EmailVerification />} />
+        <Route path="/about" element={<AboutUs />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
         />
-        <DarkModeOverlay />
-        {!isAdminRoute && <Footer />}
-      </Box>
+        <Route
+          path="/admin/tasks"
+          element={
+            <ProtectedRoute>
+              <AdminTasks />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <Cursor
+        style={{
+          left: `${cursorPos.x}px`,
+          top: `${cursorPos.y}px`,
+          opacity: mode === "dark" ? 1 : 0,
+        }}
+      />
+      <DarkModeOverlay />
+      {!isAdminRoute && <Footer />}
     </ThemeProvider>
   );
 }

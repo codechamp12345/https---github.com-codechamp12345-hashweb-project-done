@@ -226,7 +226,7 @@ const AboutUs = () => {
         >
           <Grid container spacing={4}>
             {features.map((feature, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid xs={12} sm={6} md={3} key={index}>
                 <FeatureCard
                   variants={itemVariants}
                   initial={{ opacity: 0, y: 40 }}
@@ -274,7 +274,7 @@ const AboutUs = () => {
             </Typography>
 
             <Grid container spacing={4} justifyContent="center">
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid xs={12} sm={6} md={4}>
                 <ContactCard
                   href="tel:+919582859535"
                   variants={itemVariants}
@@ -292,7 +292,7 @@ const AboutUs = () => {
                 </ContactCard>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid xs={12} sm={6} md={4}>
                 <ContactCard
                   href="mailto:brandhashgenius@gmail.com"
                   variants={itemVariants}
