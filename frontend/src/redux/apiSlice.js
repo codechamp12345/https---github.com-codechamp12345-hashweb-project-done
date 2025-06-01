@@ -19,6 +19,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (result?.error?.status === 401) {
     console.log('401 error, logging out');
     api.dispatch(clearCredentials());
+    localStorage.removeItem('token');
+    window.location.href = '/login';
   }
 
   return result;
