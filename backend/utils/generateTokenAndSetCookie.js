@@ -5,12 +5,15 @@ export const generateTokenAndSetCookie = (id, res) => {
     expiresIn: "21d",
   });
 
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   res.cookie("jwt", token, {
-    maxAge: 21 * 24 * 60 * 60 * 1000,
+    maxAge: 21 * 24 * 60 * 60 * 1000, // 21 days
     httpOnly: true,
-    sameSite: "lax", // Use lax for development
-    secure: process.env.NODE_ENV === 'production', // Only use secure in production
+    secure: isProduction, // Only use secure in production
+    sameSite: isProduction ? 'none' : 'lax', // Use 'none' in production for cross-site cookies
     path: "/",
+    domain: isProduction ? process.env.COOKIE_DOMAIN : undefined // Set domain in production
   });
 
   return token;

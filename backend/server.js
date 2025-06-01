@@ -21,28 +21,31 @@ app.use(cookieParser());
 // CORS setup
 const allowedOrigins = [
   "http://localhost:3000",               // local dev frontend
-  "https://hashweb-project-u53z.vercel.app"  // your deployed frontend
-];
+  "https://hashweb-project-u53z.vercel.app",  // your deployed frontend
+  process.env.FRONTEND_URL               // dynamic frontend URL from env
+].filter(Boolean); // Remove any undefined values
 
 app.use(cors({
   origin: function(origin, callback) {
-    // allow requests with no origin (like Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked request from origin:', origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,                       // allow cookies/auth headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Set-Cookie'],
+  maxAge: 86400 // 24 hours
 }));
 
-// Optional: handle preflight requests
-app.options('*', cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+// Handle preflight requests
+app.options('*', cors());
 
 // Routes
 app.use("/api/v1", userRoutes);

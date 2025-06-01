@@ -11,11 +11,10 @@ export const protect = async (req, res, next) => {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
     }
-
-    // Check for token in cookies (if used)
-    // else if (req.cookies.token) {
-    //   token = req.cookies.token;
-    // }
+    // Check for token in cookies
+    else if (req.cookies?.jwt) {
+      token = req.cookies.jwt;
+    }
 
     if (!token) {
       console.log('Protect middleware: No token found');
@@ -32,43 +31,37 @@ export const protect = async (req, res, next) => {
 
       // Check if role is present
       const role = decoded.role;
+      const userId = decoded.userId || decoded.id; // Handle both token formats
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid token format'
+        });
+      }
 
       if (role === 'admin') {
-        console.log('Protect middleware: Decoded role is admin. Attempting to find admin by ID:', decoded.id);
-        const admin = await Admin.findById(decoded.id).select('-password');
-        console.log('Protect middleware: Admin findById result:', admin ? 'Found' : 'Not Found');
-        
+        const admin = await Admin.findById(userId).select('-password');
         if (!admin) {
-          console.log('Protect middleware: Admin not found for ID from token:', decoded.id);
           return res.status(401).json({
             success: false,
             message: 'Admin not found'
           });
         }
-        
         req.user = admin;
         req.user.role = 'admin';
-        console.log('Protect middleware: Admin authenticated and user object set.', admin.username);
       } else {
-        console.log('Protect middleware: Decoded role is non-admin (', role, '). Attempting to find user by ID:', decoded.id);
-        const user = await User.findById(decoded.id).select('-password');
-        console.log('Protect middleware: User findById result:', user ? 'Found' : 'Not Found');
-        
+        const user = await User.findById(userId).select('-password');
         if (!user) {
-          console.log('Protect middleware: User not found for ID from token:', decoded.id);
-          // If a token with a non-admin role doesn't match a user, it's an invalid token for protected routes
           return res.status(401).json({
             success: false,
             message: 'User not found'
           });
         }
-        
         req.user = user;
         req.user.role = role || 'user';
-        console.log('Protect middleware: User authenticated and user object set.', user.name);
       }
 
-      console.log('Protect middleware: Authentication successful. Proceeding to next middleware/route.');
       next();
     } catch (error) {
       console.error('Protect middleware: Token verification failed:', error.message);
