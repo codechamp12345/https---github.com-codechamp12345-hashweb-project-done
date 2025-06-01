@@ -33,7 +33,7 @@ const AdminNavbar = () => {
             <Link to="/admin/dashboard" className="flex-shrink-0 flex items-center">
               <img
                 className="h-8 w-auto"
-                src="/logo.png"
+                src="/logo.svg"
                 alt="BrandHash"
               />
               <span className="ml-2 text-xl font-bold text-gray-900">Admin Panel</span>
